@@ -25,5 +25,5 @@ permission:
 ## 규칙
 - 결과 행은 추가만. 수정/삭제 금지 (정정은 새 행)
 - 해석은 결과 행 id를 인용해서만
-- 카드 쓴 뒤 tools/validate 통과 확인  <!-- TODO(INHOUSE): 커맨드 (P4) -->
+- 카드 쓴 뒤 `python3 tools/validate.py card <카드 파일>` 통과 확인
 - approved 승격은 사용자 승인이 있을 때만

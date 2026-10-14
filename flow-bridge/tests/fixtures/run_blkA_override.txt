@@ -1,0 +1,7 @@
+# fictional innovus stdout excerpt (blkA, all_on run)
+**INFO: optDesign -postCTS done
+FB_READBACK|DTCO-0001.1|post_cts|OK|true
+**INFO: routeDesign done
+FB_READBACK|DTCO-0001.1|route|OK|true
+**INFO: sourcing design overrides
+FB_READBACK|DTCO-0001.1|post_route|OK|false

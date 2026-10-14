@@ -26,7 +26,8 @@ run 실행과 폴링은 pnr-rundori가 한다.
 - [ ] 완료 대기는 pnr-rundori의 polling 방식. bridge-pilot이 blocking wait 하지 않는다
 
 ### 확인
-- [ ] **readback 먼저.** run마다 tools/readback으로 판정 (applied / overridden / missing)  <!-- TODO(INHOUSE): 커맨드 (P4) -->
+- [ ] **readback 먼저.** run마다 판정 (applied / overridden / missing)
+  - `python3 tools/readback.py judge --expect 2_place/readback/expect.yaml --log <run 로그> --out 4_verify/readback_<run>.yaml`
   - overridden → 그 항목 결과는 `invalid`. 2단계의 덮어쓰기 위험을 다시 확인할 지점으로 보고
 - [ ] **QoR delta** (applied인 항목만)
   - 항목 1개: all_on − baseline

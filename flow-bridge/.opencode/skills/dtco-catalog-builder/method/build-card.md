@@ -54,7 +54,7 @@ clean diff에서 같이 확인할 것:
 
 ## 4. 검증
 
-- tools/validate로 카드 검증 (frontmatter, 섹션 순서, 결과표 컬럼).  <!-- TODO(INHOUSE): 커맨드 (P4) -->
+- 카드 검증: `python3 tools/validate.py card <카드 파일>` (frontmatter, 섹션 순서, 결과표, 해석 인용)
 - 실패하면 고치고 다시. 통과 전에는 "완료" 보고 금지.
 
 ## 5. approved 승격 (사용자 요청 시에만)

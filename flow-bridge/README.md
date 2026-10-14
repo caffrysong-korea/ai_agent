@@ -59,8 +59,10 @@ flow-bridge/
 │   ├── cards/                  #   위 run으로 만든 카드 예시
 │   └── synthetic_flow/ + *_profile.example.yaml   # 가상 고객 flow + profile 예시
 ├── .opencode/                  # 스킬 2개 + 에이전트 3개
-├── tools/                      # validate / readback                   (P4)
-└── tests/                                                              (P4)
+├── tools/
+│   ├── validate.py             # 스키마 + 인용 + 카드 규칙 검사
+│   └── readback.py             # stage별 readback tcl 생성 + 로그 판정
+└── tests/                      # python3 tests/test_tools.py (가상 예시 기반 19개)
 ```
 
 ## 마커 규칙 (사내 작업용)
@@ -82,5 +84,5 @@ flow-bridge/
 | P1 | 골격 + 스키마 | 완료 (P2 재설계 반영) |
 | P2 | dtco-catalog-builder (run 데이터 → 카드) | 완료 |
 | P3 | flow-bridge 스킬 + 에이전트 + 관찰 가이드 | 완료 |
-| P4 | Python validate / readback | 예정 |
+| P4 | Python validate / readback + 테스트 | 완료 |
 | P5 | HANDOFF + 프롬프트 | 예정 |

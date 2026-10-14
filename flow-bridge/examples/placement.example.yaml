@@ -1,0 +1,24 @@
+# 2단계 산출 예시 (가상). 스키마: schema/contract/stage2_placement.schema.yaml
+# 대상: examples/synthetic_flow + examples/cards/DTCO-0001
+# citation 기준: flow_root (examples/synthetic_flow) → validate 시 --root 로 지정
+run_id: example_run
+flow_id: synth_custflow_v1
+design_ids: [blkA]
+tool_variant: invs_legacy
+placements:
+  - item_id: DTCO-0001
+    item_version: 1
+    decision: already_present
+    existing_setting: { file: common/settings.tcl, line: 12, excerpt: "-usefulSkew true" }
+    override_risks:
+      - desc: "blkA design override 파일이 post_route opt 직전에 -usefulSkew false로 재설정 (design_profile 참조)"
+        at: { file: stages/05_route.tcl, line: 4, excerpt: "apply_design_overrides postroute" }
+        level: confirmed
+        source: design_override
+    readback_points: [post_cts, route, post_route]
+    rationale: "고객 flow 공통 설정에 이미 true(loop 경유). sticky라 이후 stage 유지 여부를 readback으로 확인"
+overlay_files: []
+patch_lines:
+  - { hook_point: HP-001, line_text: "source <workspace>/2_place/readback/readback_post_cts.tcl" }
+gate1:
+  state: pending

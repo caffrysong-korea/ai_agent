@@ -1,0 +1,3 @@
+FB_READBACK|DTCO-0001.1|post_cts|OK|true
+FB_READBACK|DTCO-0001.1|route|OK|true
+FB_READBACK|DTCO-0001.1|post_route|ERR|invalid command name "getOptMode"

@@ -15,7 +15,9 @@ flow-mapper가 수행한다. bridge-pilot은 위임하고 manifest를 받는다.
 - [ ] 디자인별 설정이 끼어드는 지점(design_override_points) 기록 — proc/조건 경유 포함
 - [ ] 디자인마다: SDC fingerprint(clock, period, false/multicycle 수, uncertainty) + design override 설정
 - [ ] 모든 위치에 citation. 확인 못한 것은 unresolved
-- [ ] tools/validate 통과  <!-- TODO(INHOUSE): 커맨드 (P4) -->
+- [ ] validate 통과
+  - `python3 tools/validate.py flow_profile 1_map/flow_profile.yaml`
+  - `python3 tools/validate.py design_profile 1_map/design_<id>.yaml`
 
 ## 출력
 - `1_map/flow_profile.yaml` (schema/flow_profile.schema.yaml)
