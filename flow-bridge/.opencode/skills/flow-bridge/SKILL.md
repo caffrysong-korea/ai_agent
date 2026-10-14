@@ -6,8 +6,14 @@ description: infra팀 DTCO/DM 설정(아이템 카드)을 고객 설계팀의 �
 
 # flow-bridge
 
-> 문서 안의 `schema/…`, `tools/…`, `config/…` 경로는 **flow-bridge 루트** 기준이다. `method/…`, `guides/…`, `templates/…`는 이 스킬 폴더 기준.
-> <!-- TODO(INHOUSE): 사내에 설치한 위치에서 두 기준 경로가 맞는지 확인 (H1) -->
+## 위치
+
+```
+FB_ROOT = <AGENT_HOME>/flow-bridge      # TODO(INHOUSE): flow-bridge 폴더의 실제 절대경로로 이 한 줄만 수정
+```
+
+- 이 스킬과 연결된 문서의 `$FB_ROOT/…`는 위 경로로 바꿔 읽는다 (config, schema, tools가 있는 곳).
+- `method/…`, `guides/…`, `templates/…`는 이 스킬 폴더 기준.
 
 ## 하는 일
 
@@ -50,7 +56,7 @@ description: infra팀 DTCO/DM 설정(아이템 카드)을 고객 설계팀의 �
 
 ## 작업 폴더
 
-`paths.workspace/<run_id>/` 아래에 단계별 산출물을 둔다. (config/env.yaml)
+`paths.workspace/<run_id>/` 아래에 단계별 산출물을 둔다. ($FB_ROOT/config/env.yaml)
 
 ```
 <run_id>/

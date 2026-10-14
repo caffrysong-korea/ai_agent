@@ -1,6 +1,6 @@
 # H6 — 항목 선택 + PnR 검증 (3~4단계, 라이브)
 
-**붙여넣기 전 확인:** config/env.yaml의 `execution.*`(pnr-rundori 연결)과 `policy.noise_band`가 채워져 있어야 한다.
+**붙여넣기 전 확인:** $FB_ROOT/config/env.yaml의 `execution.*`(pnr-rundori 연결)과 `policy.noise_band`가 채워져 있어야 한다.
 
 ---
 
@@ -12,7 +12,7 @@ gate ① 승인 항목: <DTCO-xxxx, ...>
 - 3단계가 끝나면 **gate ② 표를 보여주고 멈춰.** 내가 포함/제외를 정하면 4단계로.
 - 4단계 run 실행과 폴링은 반드시 pnr-rundori에 위임. Innovus를 직접 띄우지 마. blocking wait 금지.
 - run 수가 `policy.ablation.max_runs`를 넘으면 실행 전에 나에게 물어.
-- 판정은 readback 먼저 (`tools/readback.py judge`), applied인 항목만 QoR 비교.
+- 판정은 readback 먼저 (`$FB_ROOT/tools/readback.py judge`), applied인 항목만 QoR 비교.
 - report.md를 만들고 **gate ③에서 멈춰.** 내가 승인하면 card-curator에 결과 행 추가를 위임.
 
 gate ② 보고:

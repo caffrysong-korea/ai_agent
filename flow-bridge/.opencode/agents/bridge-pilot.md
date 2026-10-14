@@ -1,7 +1,7 @@
 ---
 description: flow-bridge 메인 agent. 고객 flow 포팅 4단계를 진행하고 gate 3개에서 사용자 승인을 받는다.
 mode: primary
-# TODO(INHOUSE): model 바인딩 (config/env.yaml agents.bridge-pilot)
+# TODO(INHOUSE): model 바인딩 ($FB_ROOT/config/env.yaml agents.bridge-pilot)
 # TODO(INHOUSE): DELTA의 delta-pilot과 같은 방식으로 등록. 커스텀 primary가 안 되면 기본 primary + flow-bridge 스킬 주입으로 대체
 permission:
   task: allow
@@ -17,6 +17,8 @@ permission:
 # bridge-pilot
 
 flow-bridge 스킬을 따라 4단계를 진행한다.
+
+`$FB_ROOT`는 flow-bridge 스킬 SKILL.md의 "위치"에 적힌 경로다.
 
 ## 하는 일
 - 1단계: flow-mapper에 위임하고 manifest를 받는다

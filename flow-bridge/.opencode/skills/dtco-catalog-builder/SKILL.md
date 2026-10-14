@@ -6,8 +6,14 @@ description: 이미 돌린 PnR/PPA 평가 run 데이터(어떤 DTCO/DM 항목의
 
 # dtco-catalog-builder
 
-> 문서 안의 `schema/…`, `tools/…`, `config/…` 경로는 **flow-bridge 루트** 기준이다. `method/…`, `guides/…`, `templates/…`는 이 스킬 폴더 기준.
-> <!-- TODO(INHOUSE): 사내에 설치한 위치에서 두 기준 경로가 맞는지 확인 (H1) -->
+## 위치
+
+```
+FB_ROOT = <AGENT_HOME>/flow-bridge      # TODO(INHOUSE): flow-bridge 폴더의 실제 절대경로로 이 한 줄만 수정
+```
+
+- 이 스킬과 연결된 문서의 `$FB_ROOT/…`는 위 경로로 바꿔 읽는다 (config, schema, tools가 있는 곳).
+- `method/…`, `guides/…`, `templates/…`는 이 스킬 폴더 기준.
 
 ## 하는 일 (한 줄)
 
@@ -38,7 +44,7 @@ item-on run ──┤                                 ├─▶ ③ 카드 생�
 | 방법 | 예 |
 |---|---|
 | 사용자가 직접 알려줌 | "blkA_base vs blkA_uskew 는 useful skew 평가야" |
-| 다른 루프의 run 목록 파일 | config/env.yaml `run_data.run_manifest_hint` 형식 |
+| 다른 루프의 run 목록 파일 | $FB_ROOT/config/env.yaml `run_data.run_manifest_hint` 형식 |
 | 디렉토리 이름에서 추정 | `*_base`, `*_<항목>_on` 등 → **추정한 짝을 표로 보여주고 확인받은 뒤 진행** |
 
 ## 보고 형식

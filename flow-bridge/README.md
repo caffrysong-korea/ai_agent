@@ -65,6 +65,12 @@ flow-bridge/
 └── tests/                      # python3 tests/test_tools.py (가상 예시 기반 19개)
 ```
 
+## 사내 설치 요약
+
+opencode는 기존처럼 스킬/에이전트를 모아둔 공간(AGENT_HOME)에서 실행한다.
+`.opencode/` 안의 **스킬 2개 + 에이전트 3개만 골라서 AGENT_HOME의 `.opencode`에 추가**하고,
+나머지는 `<AGENT_HOME>/flow-bridge/`(= `$FB_ROOT`)에 둔다. 자세한 명령은 HANDOFF.md "설치".
+
 ## 마커 규칙 (사내 작업용)
 
 | 마커 | 의미 | 처리 |

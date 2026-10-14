@@ -19,20 +19,20 @@ run 실행과 폴링은 pnr-rundori가 한다.
 | loo_<항목> | 선택 항목 중 하나만 뺌 (항목이 2개 이상일 때) |
 
 - [ ] 총 run 수가 `policy.ablation.max_runs` 초과 → 사용자에게 줄일 항목을 묻는다
-- [ ] `4_verify/plan.yaml` (schema/contract/stage4_ablation.schema.yaml)
+- [ ] `4_verify/plan.yaml` ($FB_ROOT/schema/contract/stage4_ablation.schema.yaml)
 
 ### 실행
-- [ ] plan을 pnr-rundori 입력 형식으로 변환해 위임  <!-- TODO(INHOUSE): config/env.yaml execution.runner_contract 참고. 실행/폴링 방식은 pnr-rundori 구현을 그대로 따른다 -->
+- [ ] plan을 pnr-rundori 입력 형식으로 변환해 위임  <!-- TODO(INHOUSE): $FB_ROOT/config/env.yaml execution.runner_contract 참고. 실행/폴링 방식은 pnr-rundori 구현을 그대로 따른다 -->
 - [ ] 완료 대기는 pnr-rundori의 polling 방식. bridge-pilot이 blocking wait 하지 않는다
 
 ### 확인
 - [ ] **readback 먼저.** run마다 판정 (applied / overridden / missing)
-  - `python3 tools/readback.py judge --expect 2_place/readback/expect.yaml --log <run 로그> --out 4_verify/readback_<run>.yaml`
+  - `python3 $FB_ROOT/tools/readback.py judge --expect 2_place/readback/expect.yaml --log <run 로그> --out 4_verify/readback_<run>.yaml`
   - overridden → 그 항목 결과는 `invalid`. 2단계의 덮어쓰기 위험을 다시 확인할 지점으로 보고
 - [ ] **QoR delta** (applied인 항목만)
   - 항목 1개: all_on − baseline
   - 항목 여러 개: 항목 효과 = all_on − loo_<항목>, 전체 효과 = all_on − baseline
-- [ ] 판정은 schema/item_card.spec.md 판정 규칙 + `policy.noise_band`
+- [ ] 판정은 $FB_ROOT/schema/item_card.spec.md 판정 규칙 + `policy.noise_band`
 - [ ] (선택) 결과 분석이 더 필요하면 ppa-booster 분석 규칙을 champ run에 적용  <!-- TODO(INHOUSE): DELTA ppa-booster 연결 방식 -->
 
 ## 출력 — `4_verify/report.md`

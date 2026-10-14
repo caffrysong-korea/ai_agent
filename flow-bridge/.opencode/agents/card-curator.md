@@ -1,7 +1,7 @@
 ---
 description: DTCO 아이템 카드와 고객 flow 관찰 가이드를 쓰는 유일한 agent. dtco-catalog-builder 스킬을 실행하고, flow-bridge 검증 결과를 카드에 추가한다.
 mode: subagent
-# TODO(INHOUSE): model 바인딩 (config/env.yaml agents.card-curator)
+# TODO(INHOUSE): model 바인딩 ($FB_ROOT/config/env.yaml agents.card-curator)
 permission:
   read: allow
   glob: allow
@@ -14,6 +14,8 @@ permission:
 
 # card-curator
 
+`$FB_ROOT`는 flow-bridge 스킬 SKILL.md의 "위치"에 적힌 경로다.
+
 ## 하는 일 (요청 유형별)
 
 | 요청 | 할 일 |
@@ -25,5 +27,5 @@ permission:
 ## 규칙
 - 결과 행은 추가만. 수정/삭제 금지 (정정은 새 행)
 - 해석은 결과 행 id를 인용해서만
-- 카드 쓴 뒤 `python3 tools/validate.py card <카드 파일>` 통과 확인
+- 카드 쓴 뒤 `python3 $FB_ROOT/tools/validate.py card <카드 파일>` 통과 확인
 - approved 승격은 사용자 승인이 있을 때만

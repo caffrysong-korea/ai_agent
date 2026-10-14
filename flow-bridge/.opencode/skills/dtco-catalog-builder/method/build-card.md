@@ -28,7 +28,7 @@ run 쌍마다 baseline과 treatment를 비교한다. 소스 우선순위:
 | 차이 없음 | 설정이 안 걸린 것 → 결과 행 `invalid`, 비고 "diff 없음" |
 
 clean diff에서 같이 확인할 것:
-- **stage**: 바뀐 커맨드가 어느 stage에서 실행됐나 (schema/stage_taxonomy.yaml 기준)
+- **stage**: 바뀐 커맨드가 어느 stage에서 실행됐나 ($FB_ROOT/schema/stage_taxonomy.yaml 기준)
 - **sticky**: mode/attribute 설정이면 `yes`, 특정 커맨드 옵션이면 `no`, 모르면 `unknown`
 - **requires**: 커맨드가 run 쪽에서 정의된 proc/변수/파일을 쓰면 기록 (고객 flow 이식 위험)
 - **readback**: 같은 툴에서 실효값을 묻는 커맨드. 확실할 때만 초안으로 쓰고 `verified: false`
@@ -37,7 +37,7 @@ clean diff에서 같이 확인할 것:
 
 - env `run_data.qor_summary`의 QoR 파일에서 fmax, WNS, TNS, power, area를 읽는다.
 - baseline 대비 delta로 기록 (fmax/power/area는 %, WNS/TNS는 ns 차이). 절대값은 쓰지 않는다.
-- 판정은 schema/item_card.spec.md 판정 규칙 + env `policy.noise_band`.
+- 판정은 $FB_ROOT/schema/item_card.spec.md 판정 규칙 + env `policy.noise_band`.
 - QoR 파일이 없거나 run이 실패했으면 `invalid`.
 
 ## 3. 카드 쓰기
@@ -54,7 +54,7 @@ clean diff에서 같이 확인할 것:
 
 ## 4. 검증
 
-- 카드 검증: `python3 tools/validate.py card <카드 파일>` (frontmatter, 섹션 순서, 결과표, 해석 인용)
+- 카드 검증: `python3 $FB_ROOT/tools/validate.py card <카드 파일>` (frontmatter, 섹션 순서, 결과표, 해석 인용)
 - 실패하면 고치고 다시. 통과 전에는 "완료" 보고 금지.
 
 ## 5. approved 승격 (사용자 요청 시에만)

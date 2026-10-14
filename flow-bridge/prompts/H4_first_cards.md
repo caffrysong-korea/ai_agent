@@ -13,8 +13,8 @@ card-curator로 dtco-catalog-builder 스킬을 실행해서 DTCO 카드를 만�
 규칙:
 - 반드시 card-curator 에이전트에게 위임해. 위임이 실패하면 대신하지 말고 실패를 보고해.
 - 스킬의 method/build-card.md 절차 0~4만. approved 승격은 내가 따로 말할 때만.
-- 카드는 config/env.yaml의 `paths.item_cards`에만 쓴다.
-- 끝나면 `python3 flow-bridge/tools/validate.py card <카드>` 통과 확인.
+- 카드는 $FB_ROOT/config/env.yaml의 `paths.item_cards`에만 쓴다.
+- 끝나면 `python3 $FB_ROOT/tools/validate.py card <카드>` 통과 확인.
 
 보고 형식 (스킬 보고 형식 그대로):
 ```

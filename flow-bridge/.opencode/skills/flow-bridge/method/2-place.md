@@ -24,11 +24,11 @@
 
 ## 산출물 만들기
 - [ ] `2_place/overlay/<stage>_<hook>.tcl` : 해당 hook에 들어갈 설정 줄. 줄마다 주석 `# DTCO-xxxx v<ver>`
-- [ ] `2_place/readback/` 생성: `python3 tools/readback.py gen --placement 2_place/placement.yaml --cards <paths.item_cards> --out 2_place/readback`
+- [ ] `2_place/readback/` 생성: `python3 $FB_ROOT/tools/readback.py gen --placement 2_place/placement.yaml --cards <paths.item_cards> --out 2_place/readback`
   - 생성된 `readback_<stage>.tcl`을 각 readback 지점 stage 끝에서 source하는 줄을 patch_lines에 추가
 - [ ] insert_line hook이면 고객 flow에 넣을 `source` 한 줄을 patch_lines에 기록 (적용은 하지 않음)
-- [ ] `2_place/placement.yaml` (schema/contract/stage2_placement.schema.yaml)
-  - `python3 tools/validate.py stage2 2_place/placement.yaml --root <flow_root>`
+- [ ] `2_place/placement.yaml` ($FB_ROOT/schema/contract/stage2_placement.schema.yaml)
+  - `python3 $FB_ROOT/tools/validate.py stage2 2_place/placement.yaml --root <flow_root>`
 
 ## gate ① — 사용자에게 보여줄 표
 

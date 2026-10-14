@@ -27,7 +27,7 @@ gate ①을 통과한 카드 중 **이 디자인에 무엇을 적용할지** 추
 | `skip` | 비슷한 행이 negative, 또는 rule로 제외 |
 | `experiment` | 그 외 전부 (heuristic / none이면 adopt 금지) |
 
-- [ ] `3_select/select_<design>.yaml` (schema/contract/stage3_selection.schema.yaml) + validate
+- [ ] `3_select/select_<design>.yaml` ($FB_ROOT/schema/contract/stage3_selection.schema.yaml) + validate
 
 ## gate ② — 사용자에게 보여줄 표 (디자인마다)
 
