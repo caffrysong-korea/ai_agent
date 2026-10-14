@@ -43,8 +43,8 @@ infra팀이 만든 DTCO / PnR DM 설정을 **고객 설계팀의 자체 PnR flow
 ```
 flow-bridge/
 ├── README.md
-├── HANDOFF.md                  # 사내 opencode 작업 가이드            (P5)
-├── prompts/                    # 사내 opencode 단계별 프롬프트         (P5)
+├── HANDOFF.md                  # 사내 opencode 작업 가이드 (여기부터 읽기)
+├── prompts/                    # 사내 opencode 단계별 프롬프트 H0~H6
 ├── config/env.yaml             # 환경 의존값 단일 집약
 ├── schema/
 │   ├── stage_taxonomy.yaml     # 툴 무관 stage 정의
@@ -85,4 +85,4 @@ flow-bridge/
 | P2 | dtco-catalog-builder (run 데이터 → 카드) | 완료 |
 | P3 | flow-bridge 스킬 + 에이전트 + 관찰 가이드 | 완료 |
 | P4 | Python validate / readback + 테스트 | 완료 |
-| P5 | HANDOFF + 프롬프트 | 예정 |
+| P5 | HANDOFF + 프롬프트 H0~H6 | 완료 |
