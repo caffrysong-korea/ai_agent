@@ -1,0 +1,128 @@
+# flow profile 예시. 대상: examples/synthetic_flow (가상 고객 flow)
+# 스키마: schema/flow_profile.schema.yaml
+# citation의 file은 flow_root 기준 상대경로. tools/validate(P4)가 line/excerpt를 실제 파일과 대조한다.
+
+flow_id: synth_custflow_v1
+flow_kind: customer
+flow_root: examples/synthetic_flow
+flow_version: "example"
+tool: innovus
+ui_mode: legacy
+
+launch:
+  entry_script: run_flow.tcl
+  wrapper: "unknown"
+  at: { file: run_flow.tcl, line: 12, excerpt: "source $FLOW_ROOT/common/settings.tcl" }
+
+stage_map:
+  - abstract_stage: init
+    flow_stage_name: "common/settings + 01_init"
+    entry: { file: run_flow.tcl, line: 12, excerpt: "common/settings.tcl" }
+    end:   { file: stages/01_init.tcl, line: 5, excerpt: "run_hook post_init" }
+    files: [common/settings.tcl, stages/01_init.tcl]
+  - abstract_stage: floorplan
+    flow_stage_name: "02_floorplan"
+    entry: { file: stages/02_floorplan.tcl, line: 2, excerpt: "defIn" }
+    end:   { file: stages/02_floorplan.tcl, line: 3, excerpt: "run_hook post_floorplan" }
+    files: [stages/02_floorplan.tcl]
+  - abstract_stage: place
+    flow_stage_name: "03_place"
+    entry: { file: stages/03_place.tcl, line: 2, excerpt: "run_hook pre_place" }
+    end:   { file: stages/03_place.tcl, line: 5, excerpt: "run_hook post_place" }
+    files: [stages/03_place.tcl]
+  - abstract_stage: cts
+    flow_stage_name: "04_cts (ccopt)"
+    entry: { file: stages/04_cts.tcl, line: 2, excerpt: "run_hook pre_cts" }
+    end:   { file: stages/04_cts.tcl, line: 3, excerpt: "ccopt_design" }
+    files: [stages/04_cts.tcl]
+  - abstract_stage: post_cts
+    flow_stage_name: "04_cts (postCTS opt)"
+    entry: { file: stages/04_cts.tcl, line: 4, excerpt: "optDesign -postCTS" }
+    end:   { file: stages/04_cts.tcl, line: 5, excerpt: "run_hook post_cts" }
+    files: [stages/04_cts.tcl]
+  - abstract_stage: route
+    flow_stage_name: "05_route (route)"
+    entry: { file: stages/05_route.tcl, line: 2, excerpt: "run_hook pre_route" }
+    end:   { file: stages/05_route.tcl, line: 3, excerpt: "routeDesign" }
+    files: [stages/05_route.tcl]
+  - abstract_stage: post_route
+    flow_stage_name: "05_route (postRoute opt)"
+    entry: { file: stages/05_route.tcl, line: 4, excerpt: "apply_design_overrides postroute" }
+    end:   { file: stages/05_route.tcl, line: 6, excerpt: "run_hook post_route" }
+    files: [stages/05_route.tcl]
+
+source_chain:
+  - { from: run_flow.tcl, to: common/settings.tcl,  at: { file: run_flow.tcl, line: 12, excerpt: "common/settings.tcl" } }
+  - { from: run_flow.tcl, to: stages/01_init.tcl,   at: { file: run_flow.tcl, line: 13, excerpt: "stages/01_init.tcl" } }
+  - { from: run_flow.tcl, to: stages/05_route.tcl,  at: { file: run_flow.tcl, line: 17, excerpt: "stages/05_route.tcl" } }
+  - from: run_flow.tcl
+    to: "hooks/<name>.tcl"
+    at: { file: run_flow.tcl, line: 8, excerpt: "source $HOOK_DIR/$name.tcl" }
+    conditional: "hooks/<name>.tcl 파일이 존재할 때만 (run_hook proc)"
+  - from: common/settings.tcl
+    to: "$env(DESIGN_DIR)/overrides_<stage>.tcl"
+    at: { file: common/settings.tcl, line: 6, excerpt: "source $f" }
+    conditional: "apply_design_overrides proc 호출 시, 파일 존재할 때만"
+
+hook_points:
+  - id: HP-001
+    abstract_stage: post_cts
+    position: stage_end
+    at: { file: stages/04_cts.tcl, line: 5, excerpt: "run_hook post_cts" }
+    kind: official_hook
+    notes: "hooks/post_cts.tcl 생성만으로 삽입 가능 (고객 flow 수정 불필요)"
+  - id: HP-002
+    abstract_stage: post_cts
+    position: before_main_cmd
+    at: { file: stages/04_cts.tcl, line: 4, excerpt: "optDesign -postCTS" }
+    kind: insert_line
+    notes: "post-CTS opt 전에 걸어야 하는 설정용. pre_post_cts hook 슬롯 없음 → source 한 줄 삽입 필요"
+  - id: HP-003
+    abstract_stage: place
+    position: stage_begin
+    at: { file: stages/03_place.tcl, line: 2, excerpt: "run_hook pre_place" }
+    kind: official_hook
+
+knob_settings:
+  - knob_id: opt.useful_skew
+    raw: "setOptMode $opt $val   (opt_modes: -usefulSkew true)"
+    value: true
+    abstract_stage: init
+    at: { file: common/settings.tcl, line: 12, excerpt: "-usefulSkew true" }
+    via: loop
+    notes: "foreach로 일괄 설정. 실제 적용은 line 15의 setOptMode"
+  - knob_id: place.cong_effort
+    raw: "setPlaceMode -place_global_cong_effort $PLACE_CONG_EFFORT"
+    value: "$PLACE_CONG_EFFORT"
+    abstract_stage: place
+    at: { file: stages/03_place.tcl, line: 3, excerpt: "-place_global_cong_effort" }
+    via: variable
+    notes: "값은 design_cfg.tcl에서 결정 → design_profile 참조"
+  - raw: "setNanoRouteMode -routeWithTimingDriven true"
+    value: true
+    abstract_stage: init
+    at: { file: common/settings.tcl, line: 17, excerpt: "setNanoRouteMode -routeWithTimingDriven true" }
+    via: direct
+    notes: "registry에 knob 미등록 → knob_id 생략"
+
+design_override_points:
+  - desc: "디자인별 cfg source (변수 정의)"
+    at: { file: stages/01_init.tcl, line: 2, excerpt: "design_cfg.tcl" }
+    variable: "env(DESIGN_DIR)"
+    stages_affected: [init, floorplan, place]
+  - desc: "post-route 직전 디자인별 override 파일 source (proc 경유)"
+    at: { file: stages/05_route.tcl, line: 4, excerpt: "apply_design_overrides postroute" }
+    variable: "env(DESIGN_DIR)"
+    stages_affected: [post_route]
+
+env_dependencies: [DESIGN_DIR]
+
+unresolved:
+  - what: "실행 래퍼/LSF 제출 방식"
+    why: "flow 내부에 실행 커맨드 없음. 고객이 외부에서 innovus를 띄우는 방식 미확인"
+    next_action: "유저에게 질문"
+
+generated_by:
+  agent: flow-mapper
+  date: "2026-10-14"
+  observation_guide_version: "v0 (예시)"

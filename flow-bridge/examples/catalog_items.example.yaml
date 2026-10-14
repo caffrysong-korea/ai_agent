@@ -1,0 +1,46 @@
+# catalog item 예시 (가상). 스키마: schema/catalog_item.schema.yaml
+# - DTCO-0001: knob_set 형태 + 일부 ASK가 남은 draft (이터레이션 중간 상태)
+# - DTCO-0002: snippet 형태 + readback 없음 (→ 4단계에서 not_checkable로 표시됨)
+
+items:
+  - item_id: DTCO-0001
+    version: 1
+    status: draft
+    title: "post-CTS useful skew 활성화"
+    category: dm
+    intent: "setup critical path를 clock skew로 완화해 fmax 개선"
+    abstract_stage: post_cts
+    order_dep: { after: [cts], before: [route] }
+    actions:
+      - { kind: knob_set, knob_id: opt.useful_skew, value: true }
+    preconditions:
+      - { desc: "clock tree 생성 이후", check: stage_order }
+    expected_effect: { fmax: "+", power: "±", area: "0", congestion: "0", runtime: "-" }
+    amenability_hints: ASK          # infra 담당자 답변 대기
+    conflicts_with: []
+    evidence_refs: ASK
+    owner: "TODO(INHOUSE): infra 담당자"
+    review_log:
+      - { date: "2026-10-14", by: "dtco-catalog-builder", change: "REF flow에서 초안 추출" }
+
+  - item_id: DTCO-0002
+    version: 1
+    status: draft
+    title: "저구동 cell 사용 금지 (가상)"
+    category: dtco
+    intent: ASK
+    abstract_stage: init
+    actions:
+      - kind: snippet
+        desc: "특정 drive strength cell을 don't use 처리"
+        bindings:
+          invs_legacy:
+            code: "setDontUse *D0* true   ;# 가상 패턴"
+            verified: false
+          invs_stylus: absent
+          fc: absent
+    preconditions: ASK
+    expected_effect: ASK
+    amenability_hints: ASK
+    evidence_refs: ASK
+    owner: "TODO(INHOUSE): infra 담당자"

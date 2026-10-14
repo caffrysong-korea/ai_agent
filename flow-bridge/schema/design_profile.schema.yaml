@@ -1,0 +1,94 @@
+# Design profile schema (디자인 단위)
+# - 같은 flow라도 design / SDC / design override 파일이 다르면 결과가 달라진다. 그 차이를 여기에 담는다.
+# - amenability 판정(3단계)과 ledger의 design fingerprint가 이 파일을 입력으로 쓴다.
+# - 수치는 실제 파일/리포트에서 확인한 것만. 확인 못하면 필드를 비우고 unresolved에 기록.
+
+$defs:
+
+  clock:
+    type: object
+    required: [name, period_ns]
+    additionalProperties: false
+    properties:
+      name:      { type: string }
+      period_ns: { type: number }
+      generated: { type: boolean }
+      at:        { $ref: "common.schema.yaml#/$defs/citation" }
+
+type: object
+required: [design_id, flow_id, design_root, inputs, sdc, unresolved, generated_by]
+additionalProperties: false
+properties:
+  design_id: { type: string }
+  flow_id:   { type: string, description: "대응하는 flow_profile.flow_id" }
+  design_root: { type: string, description: "이 파일 안의 citation 상대경로 기준 디렉토리 (디자인 전용 파일 위치)" }
+
+  inputs:
+    type: object
+    additionalProperties: false
+    properties:
+      netlist:   { type: string }
+      sdc:       { type: array, items: { type: string } }
+      floorplan: { type: string }
+      mmmc:      { type: string, description: "view/corner 정의 파일" }
+
+  physical:
+    description: "물리 특성 fingerprint. 값의 출처(리포트/스크립트)를 notes에"
+    type: object
+    additionalProperties: false
+    properties:
+      std_cell_count:   { type: integer }
+      macro_count:      { type: integer }
+      core_area_um2:    { type: number }
+      target_util:      { type: number, description: "0~1" }
+      metal_layers:     { type: integer }
+      notes:            { type: string }
+
+  sdc:
+    description: "SDC fingerprint. amenability 판정 핵심 입력"
+    type: object
+    additionalProperties: false
+    properties:
+      clocks:            { type: array, items: { $ref: "#/$defs/clock" } }
+      primary_target_freq_mhz: { type: number, description: "주 clock 기준" }
+      false_path_count:  { type: integer }
+      multicycle_count:  { type: integer }
+      has_io_delay:      { type: boolean }
+      clock_uncertainty_ns: { type: number }
+      notes:             { type: string }
+
+  design_overrides:
+    description: "디자인별 설정 파일이 거는 knob 설정 (flow 공통 설정을 덮어쓰는 지점)"
+    type: array
+    items:
+      type: object
+      required: [raw, at]
+      additionalProperties: false
+      properties:
+        knob_id:        { type: string }
+        raw:            { type: string }
+        value:          {}
+        abstract_stage: { $ref: "common.schema.yaml#/$defs/stage_id" }
+        at:             { $ref: "common.schema.yaml#/$defs/citation" }
+
+  traits:
+    description: >
+      판정용 정성 특성 (예: congestion-prone, macro-dominant, high-freq).
+      LLM이 붙인 태그는 반드시 basis(근거)를 함께 기록.
+    type: array
+    items:
+      type: object
+      required: [tag, basis]
+      additionalProperties: false
+      properties:
+        tag:   { type: string }
+        basis: { type: string }
+
+  unresolved:   { type: array, items: { $ref: "common.schema.yaml#/$defs/unresolved_item" } }
+  generated_by:
+    type: object
+    required: [agent, date]
+    additionalProperties: false
+    properties:
+      agent: { type: string }
+      date:  { type: string }

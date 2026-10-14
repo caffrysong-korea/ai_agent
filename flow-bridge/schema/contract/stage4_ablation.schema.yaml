@@ -1,0 +1,59 @@
+# Contract: Stage 4 (PnR 검증) — ablation plan(→ pnr-rundori) 과 result(→ Gate 3 → ledger)
+# 실행/폴링은 pnr-rundori가 담당. 이 plan을 pnr-rundori 입력 형식으로 변환하는 규칙은
+# config/env.yaml execution.runner_contract 에 정의한다.  TODO(INHOUSE)
+
+$defs:
+  run_spec:
+    type: object
+    required: [run_name, role, items_on]
+    additionalProperties: false
+    properties:
+      run_name: { type: string, description: "디렉토리 네이밍에 사용. 예) d1_loo_DTCO-0007" }
+      role:     { type: string, enum: [baseline, all_on, leave_one_out, single_on, pair] }
+      items_on: { type: array, items: { type: string } }
+      left_out: { type: string, description: "leave_one_out일 때 제외 항목" }
+
+  run_result:
+    type: object
+    required: [run_name, status, readback]
+    additionalProperties: false
+    properties:
+      run_name: { type: string }
+      status:   { type: string, enum: [done, failed, timeout] }
+      readback:
+        type: array
+        description: "tools/readback 판정 결과"
+        items:
+          type: object
+          required: [item_id, stage, status]
+          additionalProperties: false
+          properties:
+            item_id: { type: string }
+            stage:   { $ref: "../common.schema.yaml#/$defs/stage_id" }
+            status:  { type: string, enum: [applied, overridden, missing, not_checkable] }
+            observed: { type: string }
+      metrics_ref: { type: string, description: "QoR 수집 결과 파일 (pnr-rundori 산출)" }
+
+type: object
+required: [run_id, design_id, plan]
+additionalProperties: false
+properties:
+  run_id:    { type: string }
+  design_id: { type: string }
+  plan:
+    type: object
+    required: [strategy, runs]
+    additionalProperties: false
+    properties:
+      strategy: { type: string, enum: [leave_one_out, single_on, custom] }
+      runs:     { type: array, items: { $ref: "#/$defs/run_spec" } }
+      max_runs: { type: integer }
+  results:   { type: array, items: { $ref: "#/$defs/run_result" } }
+  analysis_ref: { type: string, description: "bridge-pilot의 결과 분석 문서 (ppa-booster 분석 규칙 재사용)" }
+  gate3:
+    type: object
+    required: [state]
+    additionalProperties: false
+    properties:
+      state: { type: string, enum: [pending, approved, rejected] }
+      ledger_entries: { type: array, items: { type: string }, description: "승인 후 curator가 기록한 entry_id" }

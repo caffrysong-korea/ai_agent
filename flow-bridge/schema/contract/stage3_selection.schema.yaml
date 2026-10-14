@@ -1,0 +1,36 @@
+# Contract: Stage 3 (디자인별 항목 선택) → Gate 2 → Stage 4
+# 디자인 하나당 하나. 근거 레벨을 숨기지 않는다.
+
+$defs:
+  judgement:
+    type: object
+    required: [item_id, amenability, evidence_level, recommendation, reason]
+    additionalProperties: false
+    properties:
+      item_id:        { type: string, pattern: "^DTCO-[0-9]{4}$" }
+      amenability:    { type: string, enum: [favorable, unfavorable, excluded, unknown] }
+      evidence_level: { $ref: "../common.schema.yaml#/$defs/evidence_level" }
+      evidence_refs:  { type: array, items: { type: string }, description: "ledger entry_id, catalog 필드, heuristic id" }
+      heuristic_state: { type: string, enum: [seed, candidate, promoted], description: "evidence_level=heuristic일 때 필수" }
+      recommendation:
+        type: string
+        enum: [adopt, experiment, skip]
+        description: "evidence_level이 heuristic/none이면 adopt 금지 → experiment로만 제시"
+      reason:         { type: string }
+      user_decision:  { type: string, enum: [pending, include, exclude] }
+
+type: object
+required: [run_id, design_id, judgements, gate2]
+additionalProperties: false
+properties:
+  run_id:     { type: string }
+  design_id:  { type: string }
+  judgements: { type: array, items: { $ref: "#/$defs/judgement" } }
+  gate2:
+    type: object
+    required: [state]
+    additionalProperties: false
+    properties:
+      state:    { type: string, enum: [pending, approved, rejected] }
+      selected_items: { type: array, items: { type: string } }
+      user_notes: { type: string }

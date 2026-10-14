@@ -1,0 +1,68 @@
+# Contract: Stage 2 (infra 설정 반영 위치) → Gate 1 → Stage 3
+# tool-agnostic 판단 결과. 툴 문법은 overlay 생성 시점에만 binding으로 해석한다.
+
+$defs:
+  override_risk:
+    type: object
+    required: [desc, at, level]
+    additionalProperties: false
+    properties:
+      desc:  { type: string, description: "예) post_route 진입 전 design override 파일에서 같은 knob 재설정" }
+      at:    { $ref: "../common.schema.yaml#/$defs/citation" }
+      level: { type: string, enum: [confirmed, suspected] }
+      source: { type: string, enum: [flow, design_override] }
+
+  placement:
+    type: object
+    required: [item_id, item_version, decision, rationale]
+    additionalProperties: false
+    properties:
+      item_id:      { type: string, pattern: "^DTCO-[0-9]{4}$" }
+      item_version: { type: integer }
+      decision:
+        type: string
+        enum: [placeable, already_present, conflict, precondition_fail, no_binding, needs_human]
+        description: >
+          placeable = 삽입 위치 확정, already_present = 고객 flow에 이미 동일 설정 존재(값 비교 결과 notes),
+          conflict = 고객 설정과 충돌, precondition_fail = 전제조건 불충족,
+          no_binding = 고객 flow의 tool_variant binding이 absent, needs_human = 판단 불가
+      hook_point:     { type: string, pattern: "^HP-[0-9]{3}$" }
+      existing_setting: { $ref: "../common.schema.yaml#/$defs/citation", description: "already_present/conflict 시 고객 측 설정 위치" }
+      override_risks: { type: array, items: { $ref: "#/$defs/override_risk" } }
+      readback_points:
+        type: array
+        items: { $ref: "../common.schema.yaml#/$defs/stage_id" }
+        description: "적용 후 값 유지 여부를 확인할 stage 끝 지점들 (sticky면 삽입 stage 이후 전부)"
+      rationale: { type: string }
+
+type: object
+required: [run_id, flow_id, tool_variant, placements, overlay_files, gate1]
+additionalProperties: false
+properties:
+  run_id:       { type: string }
+  flow_id:      { type: string }
+  design_ids:   { type: array, items: { type: string }, description: "design override까지 검토한 디자인 목록" }
+  tool_variant: { $ref: "../common.schema.yaml#/$defs/tool_variant" }
+  placements:   { type: array, items: { $ref: "#/$defs/placement" } }
+  overlay_files:
+    type: array
+    description: "생성된 overlay/readback 파일 경로 (stage별)"
+    items: { type: string }
+  patch_lines:
+    type: array
+    description: "고객 flow에 삽입할 source 한 줄들 (insert_line hook 대상)"
+    items:
+      type: object
+      required: [hook_point, line_text]
+      additionalProperties: false
+      properties:
+        hook_point: { type: string }
+        line_text:  { type: string }
+  gate1:
+    type: object
+    required: [state]
+    additionalProperties: false
+    properties:
+      state:    { type: string, enum: [pending, approved, rejected, partially_approved] }
+      approved_items: { type: array, items: { type: string } }
+      user_notes: { type: string }

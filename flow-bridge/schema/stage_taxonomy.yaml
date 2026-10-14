@@ -1,0 +1,65 @@
+# Abstract stage taxonomy (tool-agnostic)
+# - 고객 flow / REF flow / 카탈로그 항목은 모두 이 stage id로 위치를 표현한다.
+# - 고객 flow의 실제 stage 이름(예: "01_place", "step_opt")은 flow_profile.stage_map에서 이 id로 매핑한다.
+# - 고객 flow가 두 stage를 한 스크립트에서 처리하면 같은 파일이 여러 stage에 매핑될 수 있다.
+# - readback_point: 이 stage가 끝난 직후 knob 실효값을 확인하는 지점. override 판정의 기준점.
+
+schema_version: 1
+
+stages:
+  - id: init
+    order: 10
+    desc: "design import, library/MMMC 로드, 전역 mode 설정(process node 등)"
+    typical_contents: [design import, MMMC/view 정의, global mode settings, tech/lib 설정]
+    readback_point: true
+
+  - id: floorplan
+    order: 20
+    desc: "die/core 정의, macro 배치, power plan, pin 배치, blockage"
+    typical_contents: [floorplan 로드/생성, power grid, macro placement, endcap/tap]
+    readback_point: true
+
+  - id: place
+    order: 30
+    desc: "std cell placement + pre-CTS optimization"
+    typical_contents: [placement mode settings, place+opt 커맨드, scan reorder]
+    readback_point: true
+
+  - id: cts
+    order: 40
+    desc: "clock tree synthesis"
+    typical_contents: [clock spec/NDR, CTS 커맨드, clock cell list]
+    readback_point: true
+
+  - id: post_cts
+    order: 50
+    desc: "post-CTS optimization (hold fix 포함 가능)"
+    typical_contents: [opt mode settings, useful skew, hold fix]
+    readback_point: true
+
+  - id: route
+    order: 60
+    desc: "global/detail routing"
+    typical_contents: [route mode settings, via/NDR 규칙, route 커맨드]
+    readback_point: true
+
+  - id: post_route
+    order: 70
+    desc: "post-route optimization, SI fix, ECO, filler"
+    typical_contents: [post-route opt, SI settings, filler/decap insertion]
+    readback_point: true
+
+  - id: export
+    order: 80
+    desc: "signoff용 산출물 export (netlist/DEF/SPEF/report). 설정 반영 대상은 드묾"
+    typical_contents: [netlist/DEF write, extraction, report 생성]
+    readback_point: false
+
+# 규칙
+rules:
+  - "카탈로그 항목의 abstract_stage는 위 id 중 하나여야 한다."
+  - "order_dep(after/before)는 위 id로만 표현한다."
+  - "고객 flow에서 위 stage로 매핑할 수 없는 구간은 flow_profile.unresolved에 기록한다 (임의 매핑 금지)."
+  - "sticky knob(mode 설정류)은 설정된 stage 이후 모든 readback_point에서 값이 유지되는지 확인 대상이 된다."
+# TODO(INHOUSE): 사내 고객 flow들에 공통적으로 존재하는 추가 stage(예: pre-place opt 분리, ECO 전용 stage)가 있으면
+#                새 id를 추가하되 order 값 사이에 끼워 넣을 것 (기존 id 변경 금지 — 카탈로그/ledger 호환성).

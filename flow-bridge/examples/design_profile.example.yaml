@@ -1,0 +1,45 @@
+# design profile 예시. 대상: examples/synthetic_flow/designs/blkA (가상)
+# 스키마: schema/design_profile.schema.yaml
+# citation의 file은 design_root 기준 상대경로.
+
+design_id: blkA
+flow_id: synth_custflow_v1
+design_root: examples/synthetic_flow/designs/blkA
+
+inputs:
+  sdc: [blkA.sdc]
+  floorplan: blkA_fp.def
+
+sdc:
+  clocks:
+    - { name: clk_core, period_ns: 0.5,  generated: false, at: { file: blkA.sdc, line: 2, excerpt: "-period 0.500" } }
+    - { name: clk_div2, period_ns: 1.0,  generated: true,  at: { file: blkA.sdc, line: 3, excerpt: "-divide_by 2" } }
+  primary_target_freq_mhz: 2000
+  false_path_count: 1
+  multicycle_count: 1
+  has_io_delay: true
+  clock_uncertainty_ns: 0.03
+
+design_overrides:
+  - knob_id: place.cong_effort
+    raw: "set PLACE_CONG_EFFORT high"
+    value: high
+    abstract_stage: place
+    at: { file: design_cfg.tcl, line: 3, excerpt: "PLACE_CONG_EFFORT high" }
+  - knob_id: opt.useful_skew
+    raw: "setOptMode -usefulSkew false"
+    value: false
+    abstract_stage: post_route
+    at: { file: overrides_postroute.tcl, line: 2, excerpt: "setOptMode -usefulSkew false" }
+
+traits:
+  - { tag: high-freq, basis: "clk_core 2 GHz (가상 수치)" }
+
+unresolved:
+  - what: "physical fingerprint (cell 수, util, macro 수)"
+    why: "netlist/floorplan 리포트 미열람 (예시)"
+    next_action: "init 이후 report로 수집"
+
+generated_by:
+  agent: flow-mapper
+  date: "2026-10-14"

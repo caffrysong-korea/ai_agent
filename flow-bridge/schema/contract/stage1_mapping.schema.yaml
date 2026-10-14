@@ -1,0 +1,18 @@
+# Contract: Stage 1 (고객 flow 분석) → Stage 2
+# flow-mapper가 반환하는 manifest. profile 본문은 파일로 저장하고 경로만 넘긴다 (컨텍스트 절약).
+
+type: object
+required: [run_id, flow_profile_ref, design_profile_refs, status, summary]
+additionalProperties: false
+properties:
+  run_id:              { type: string, description: "flow-bridge 작업 단위 id. workspace 하위 디렉토리명" }
+  flow_profile_ref:    { type: string }
+  flow_profile_reused: { type: boolean, description: "기존 profile 재사용 여부 (flow_version 동일 시)" }
+  design_profile_refs: { type: array, items: { type: string } }
+  status:
+    type: string
+    enum: [complete, partial, failed]
+    description: "partial = unresolved 존재. 2단계 진행은 가능하나 unresolved를 유저에게 노출해야 함"
+  validate_passed:     { type: boolean, description: "tools/validate 스키마 + 인용 검증 통과 여부" }
+  unresolved_count:    { type: integer, minimum: 0 }
+  summary:             { type: string, description: "3줄 이내 요약 (stage 수, hook 수, 주요 unresolved)" }
