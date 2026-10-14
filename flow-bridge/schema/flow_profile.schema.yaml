@@ -47,7 +47,7 @@ $defs:
     required: [raw, abstract_stage, at]
     additionalProperties: false
     properties:
-      knob_id:  { type: string, description: "registry로 정규화된 id. 매핑 못하면 생략하고 raw만" }
+      matches_item: { type: string, pattern: "^DTCO-[0-9]{4}$", description: "같은 설정을 다루는 DTCO 카드 id (값이 달라도 같은 설정이면 기록). 없으면 생략" }
       raw:      { type: string, description: "원문 커맨드" }
       value:    { description: "해석된 값. 변수면 변수명 + resolved 여부를 notes에" }
       abstract_stage: { $ref: "common.schema.yaml#/$defs/stage_id" }

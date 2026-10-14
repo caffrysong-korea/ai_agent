@@ -1,4 +1,4 @@
-# Contract: Stage 4 (PnR 검증) — ablation plan(→ pnr-rundori) 과 result(→ Gate 3 → ledger)
+# Contract: Stage 4 (PnR 검증) — ablation plan(→ pnr-rundori) 과 result(→ Gate 3 → 아이템 카드 결과표)
 # 실행/폴링은 pnr-rundori가 담당. 이 plan을 pnr-rundori 입력 형식으로 변환하는 규칙은
 # config/env.yaml execution.runner_contract 에 정의한다.  TODO(INHOUSE)
 
@@ -56,4 +56,4 @@ properties:
     additionalProperties: false
     properties:
       state: { type: string, enum: [pending, approved, rejected] }
-      ledger_entries: { type: array, items: { type: string }, description: "승인 후 curator가 기록한 entry_id" }
+      card_rows: { type: array, items: { type: string }, description: "승인 후 card-curator가 추가한 결과 행 (예: DTCO-0001#R-007)" }

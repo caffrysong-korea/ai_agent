@@ -1,0 +1,48 @@
+# DTCO item card — frontmatter 스키마
+# - 카드 = DTCO/DM 항목 하나당 md 파일 하나 (<item_id>_<name>.md). 본문 섹션 규격은 item_card.spec.md.
+# - frontmatter는 기계(tools/validate, tools/readback)가 읽는 최소 정보만 둔다. 나머지는 전부 본문(md).
+# - 작성/수정: card-curator만 (writer 1인). 다른 agent는 읽기만.
+
+$defs:
+  setting:
+    description: "이 항목이 켜질 때 실제로 바뀌는 설정 하나 (run diff로 확인된 것만)"
+    type: object
+    required: [variant, set, sticky, verified]
+    additionalProperties: false
+    properties:
+      variant:  { $ref: "common.schema.yaml#/$defs/tool_variant" }
+      set:      { type: string, description: "설정 커맨드 원문 (run diff에서 확인된 그대로)" }
+      readback: { type: string, description: "실효값을 출력하는 TCL 표현식. 모르면 생략 → readback 불가 항목" }
+      expect:   { type: string, description: "readback 출력이 포함해야 하는 문자열 (켜졌을 때)" }
+      sticky:
+        type: string
+        enum: ["yes", "no", unknown]
+        description: "yes = mode/attribute처럼 이후 stage까지 유지 (덮어쓰기 탐지 대상), no = 특정 커맨드 옵션"
+      requires:
+        type: array
+        items: { type: string }
+        description: "설정이 기대는 REF 전용 proc/변수/파일. 고객 flow에 없으면 이식 시 깨짐"
+      verified: { type: boolean, description: "사내 툴에서 set/readback 동작 확인 여부" }
+
+type: object
+required: [item_id, name, version, status, stage, settings]
+additionalProperties: false
+properties:
+  item_id: { type: string, pattern: "^DTCO-[0-9]{4}$", description: "재사용 금지 (삭제된 번호 포함)" }
+  name:    { type: string, pattern: "^[a-z0-9_]+$", description: "파일명에 쓰는 짧은 이름" }
+  version:
+    type: integer
+    minimum: 1
+    description: "settings가 바뀌면 +1. 평가 결과 행에 version이 기록되어 이전 결과와 구분됨"
+  status:
+    type: string
+    enum: [draft, approved]
+    description: "approved = 설정이 깨끗한 run diff로 확인됨 + 사용자 승인. flow-bridge는 approved만 사용"
+  category: { type: string, enum: [dtco, dm] }
+  stage:    { $ref: "common.schema.yaml#/$defs/stage_id" }
+  settings:
+    type: array
+    items: { $ref: "#/$defs/setting" }
+  conflicts_with:
+    type: array
+    items: { type: string, pattern: "^DTCO-[0-9]{4}$" }

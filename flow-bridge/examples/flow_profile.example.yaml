@@ -84,15 +84,14 @@ hook_points:
     kind: official_hook
 
 knob_settings:
-  - knob_id: opt.useful_skew
+  - matches_item: DTCO-0001
     raw: "setOptMode $opt $val   (opt_modes: -usefulSkew true)"
     value: true
     abstract_stage: init
     at: { file: common/settings.tcl, line: 12, excerpt: "-usefulSkew true" }
     via: loop
     notes: "foreach로 일괄 설정. 실제 적용은 line 15의 setOptMode"
-  - knob_id: place.cong_effort
-    raw: "setPlaceMode -place_global_cong_effort $PLACE_CONG_EFFORT"
+  - raw: "setPlaceMode -place_global_cong_effort $PLACE_CONG_EFFORT"
     value: "$PLACE_CONG_EFFORT"
     abstract_stage: place
     at: { file: stages/03_place.tcl, line: 3, excerpt: "-place_global_cong_effort" }
@@ -103,7 +102,7 @@ knob_settings:
     abstract_stage: init
     at: { file: common/settings.tcl, line: 17, excerpt: "setNanoRouteMode -routeWithTimingDriven true" }
     via: direct
-    notes: "registry에 knob 미등록 → knob_id 생략"
+    notes: "대응하는 DTCO 카드 없음 → matches_item 생략"
 
 design_override_points:
   - desc: "디자인별 cfg source (변수 정의)"

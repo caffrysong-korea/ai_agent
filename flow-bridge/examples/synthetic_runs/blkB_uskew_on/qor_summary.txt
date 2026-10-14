@@ -1,0 +1,9 @@
+design: blkB
+target_freq_mhz: 1500
+util: 0.65
+fmax_mhz: 1500
+wns_ns: -0.004
+tns_ns: -0.15
+power_mw: 80.5
+area_um2: 3010
+status: done

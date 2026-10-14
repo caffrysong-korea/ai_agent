@@ -18,7 +18,7 @@ $defs:
     additionalProperties: false
     properties:
       item_id:      { type: string, pattern: "^DTCO-[0-9]{4}$" }
-      item_version: { type: integer }
+      item_version: { type: integer, description: "판단에 쓴 카드 version" }
       decision:
         type: string
         enum: [placeable, already_present, conflict, precondition_fail, no_binding, needs_human]

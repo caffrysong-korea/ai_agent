@@ -47,9 +47,9 @@ $defs:
 
   evidence_level:
     type: string
-    enum: [rule, ledger, heuristic, none]
+    enum: [rule, measured, heuristic, none]
     description: >
-      rule = 카탈로그 precondition/hard rule, ledger = 유사 디자인 실측,
+      rule = 카드의 이식 주의/순서 제약 등 hard rule, measured = 카드 평가 결과표의 유사 디자인 실측,
       heuristic = 휴리스틱(상태 표시 필요), none = 근거 없음(실험 후보로만 제시)
 
   metric_delta:

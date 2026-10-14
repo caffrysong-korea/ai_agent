@@ -10,7 +10,7 @@ $defs:
       item_id:        { type: string, pattern: "^DTCO-[0-9]{4}$" }
       amenability:    { type: string, enum: [favorable, unfavorable, excluded, unknown] }
       evidence_level: { $ref: "../common.schema.yaml#/$defs/evidence_level" }
-      evidence_refs:  { type: array, items: { type: string }, description: "ledger entry_id, catalog 필드, heuristic id" }
+      evidence_refs:  { type: array, items: { type: string }, description: "카드 결과 행 (예: DTCO-0001#R-002), 카드 섹션, heuristic id" }
       heuristic_state: { type: string, enum: [seed, candidate, promoted], description: "evidence_level=heuristic일 때 필수" }
       recommendation:
         type: string

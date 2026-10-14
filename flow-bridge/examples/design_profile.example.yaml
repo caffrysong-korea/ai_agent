@@ -21,12 +21,11 @@ sdc:
   clock_uncertainty_ns: 0.03
 
 design_overrides:
-  - knob_id: place.cong_effort
-    raw: "set PLACE_CONG_EFFORT high"
+  - raw: "set PLACE_CONG_EFFORT high"
     value: high
     abstract_stage: place
     at: { file: design_cfg.tcl, line: 3, excerpt: "PLACE_CONG_EFFORT high" }
-  - knob_id: opt.useful_skew
+  - matches_item: DTCO-0001
     raw: "setOptMode -usefulSkew false"
     value: false
     abstract_stage: post_route

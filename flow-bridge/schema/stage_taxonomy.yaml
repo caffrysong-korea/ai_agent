@@ -62,4 +62,4 @@ rules:
   - "고객 flow에서 위 stage로 매핑할 수 없는 구간은 flow_profile.unresolved에 기록한다 (임의 매핑 금지)."
   - "sticky knob(mode 설정류)은 설정된 stage 이후 모든 readback_point에서 값이 유지되는지 확인 대상이 된다."
 # TODO(INHOUSE): 사내 고객 flow들에 공통적으로 존재하는 추가 stage(예: pre-place opt 분리, ECO 전용 stage)가 있으면
-#                새 id를 추가하되 order 값 사이에 끼워 넣을 것 (기존 id 변경 금지 — 카탈로그/ledger 호환성).
+#                새 id를 추가하되 order 값 사이에 끼워 넣을 것 (기존 id 변경 금지 — 아이템 카드 호환성).

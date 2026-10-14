@@ -1,6 +1,6 @@
 # Design profile schema (디자인 단위)
 # - 같은 flow라도 design / SDC / design override 파일이 다르면 결과가 달라진다. 그 차이를 여기에 담는다.
-# - amenability 판정(3단계)과 ledger의 design fingerprint가 이 파일을 입력으로 쓴다.
+# - amenability 판정(3단계)과 카드 평가 결과표의 "조건" 컬럼이 이 파일을 입력으로 쓴다.
 # - 수치는 실제 파일/리포트에서 확인한 것만. 확인 못하면 필드를 비우고 unresolved에 기록.
 
 $defs:
@@ -65,7 +65,7 @@ properties:
       required: [raw, at]
       additionalProperties: false
       properties:
-        knob_id:        { type: string }
+        matches_item:   { type: string, pattern: "^DTCO-[0-9]{4}$" }
         raw:            { type: string }
         value:          {}
         abstract_stage: { $ref: "common.schema.yaml#/$defs/stage_id" }

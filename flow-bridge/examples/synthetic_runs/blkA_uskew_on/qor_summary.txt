@@ -1,0 +1,9 @@
+design: blkA
+target_freq_mhz: 2000
+util: 0.70
+fmax_mhz: 1990
+wns_ns: -0.008
+tns_ns: -0.60
+power_mw: 121.2
+area_um2: 5000
+status: done
