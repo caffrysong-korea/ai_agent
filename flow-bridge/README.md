@@ -82,7 +82,7 @@ flow-bridge/
 | Phase | 내용 | 상태 |
 |---|---|---|
 | P1 | 골격 + Step 0 스키마 | 완료 |
-| P2 | dtco-catalog-builder | 예정 |
+| P2 | dtco-catalog-builder | 완료 |
 | P3 | flow-bridge 스킬 + 에이전트 + 관찰 가이드 | 예정 |
 | P4 | Python validate / readback / ledger | 예정 |
 | P5 | HANDOFF + 프롬프트 H0~H6 | 예정 |

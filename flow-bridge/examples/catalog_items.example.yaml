@@ -1,46 +1,61 @@
-# catalog item 예시 (가상). 스키마: schema/catalog_item.schema.yaml
-# - DTCO-0001: knob_set 형태 + 일부 ASK가 남은 draft (이터레이션 중간 상태)
-# - DTCO-0002: snippet 형태 + readback 없음 (→ 4단계에서 not_checkable로 표시됨)
+# catalog 예시 (가상). 스키마: schema/catalog_item.schema.yaml
+# 출처: examples/synthetic_ref_flow → examples/ref_flow_map.example.md (모드 A) → 이 파일 (모드 B)
+# - DTCO-0001: knob_set 형태. 모드 B 직후 상태 (intent는 REF 주석만 있어 ASK, 확인 질문 대상)
+# - DTCO-0002: snippet 형태 + REF 전용 proc 의존(requires) + readback 미정
+
+ref_flow:
+  flow_id: synth_ref_v1
+  version: "example"
+  root: examples/synthetic_ref_flow
 
 items:
   - item_id: DTCO-0001
     version: 1
     status: draft
     title: "post-CTS useful skew 활성화"
-    category: dm
-    intent: "setup critical path를 clock skew로 완화해 fmax 개선"
+    intent: ASK                     # REF 주석 "timing 개선용" → Q-0001-1 확인 질문
     abstract_stage: post_cts
     order_dep: { after: [cts], before: [route] }
     actions:
       - { kind: knob_set, knob_id: opt.useful_skew, value: true }
     preconditions:
-      - { desc: "clock tree 생성 이후", check: stage_order }
-    expected_effect: { fmax: "+", power: "±", area: "0", congestion: "0", runtime: "-" }
-    amenability_hints: ASK          # infra 담당자 답변 대기
+      - { desc: "clock tree 생성 이후 (REF에서 ccopt_design 다음)", check: stage_order }
+    expected_effect: ASK
+    amenability_hints: ASK
     conflicts_with: []
     evidence_refs: ASK
+    ref_flow_location:
+      - { file: stages/cts.tcl, line: 4, excerpt: "setOptMode -usefulSkew true" }
+    ref_toggle: "DTCO_USKEW 플래그 if문 (dtco_flags.tcl:2)"
     owner: "TODO(INHOUSE): infra 담당자"
     review_log:
-      - { date: "2026-10-14", by: "dtco-catalog-builder", change: "REF flow에서 초안 추출" }
+      - { date: "2026-10-14", by: dtco-catalog-builder, change: "REF map example에서 초안 추출" }
 
   - item_id: DTCO-0002
     version: 1
     status: draft
-    title: "저구동 cell 사용 금지 (가상)"
-    category: dtco
+    title: "저구동(D0) cell don't use"
     intent: ASK
-    abstract_stage: init
+    abstract_stage: place
     actions:
       - kind: snippet
-        desc: "특정 drive strength cell을 don't use 처리"
+        desc: "D0 drive strength cell을 don't use 처리 (REF proc 경유)"
         bindings:
           invs_legacy:
-            code: "setDontUse *D0* true   ;# 가상 패턴"
+            code: "ref_dont_use_weak *D0*"
             verified: false
+            requires: [ref_dont_use_weak]      # REF 전용 proc → 고객 flow에 없으면 깨짐
+            source_ref: { file: stages/place.tcl, line: 3, excerpt: "ref_dont_use_weak *D0*" }
           invs_stylus: absent
           fc: absent
     preconditions: ASK
     expected_effect: ASK
     amenability_hints: ASK
     evidence_refs: ASK
+    ref_flow_location:
+      - { file: stages/place.tcl, line: 3, excerpt: "ref_dont_use_weak *D0*" }
+      - { file: ref_procs.tcl, line: 3, excerpt: "setDontUse $pattern true" }
+    ref_toggle: "DTCO_DONTUSE_D0 플래그 if문 (dtco_flags.tcl:3)"
     owner: "TODO(INHOUSE): infra 담당자"
+    review_log:
+      - { date: "2026-10-14", by: dtco-catalog-builder, change: "REF map example에서 초안 추출" }

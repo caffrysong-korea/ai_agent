@@ -1,8 +1,15 @@
 # DTCO / DM catalog item schema
 # - infra팀 reference 설정 하나 = 항목 하나. dtco-catalog-builder가 infra 담당자와 이터레이션으로 작성한다.
 # - 상태: draft → reviewed → approved. flow-bridge 다운스트림은 approved만 사용한다.
+#   reviewed 조건: intent / expected_effect / preconditions에 ASK 없음 + validate 통과 + 모든 binding에 REF 인용 + 사용자 검토
+#   approved 조건: reviewed + owner(infra 담당자)의 명시적 승인이 review_log에 기록됨
+#   amenability_hints / evidence_refs는 approved에서도 ASK 허용 → 3단계에서 evidence_level을 낮게 표시
 # - ASK: 사람의 답이 필요한 필드. 추론으로 채우지 않는다.
 # - 툴 binding은 reference script가 존재하는 variant만 채운다. 나머지는 absent.
+# - 카탈로그 파일 형식 (REF flow 하나당 파일 하나):
+#     ref_flow: { flow_id, version, root }   # citation 상대경로의 기준
+#     items:    [ <이 스키마의 항목>, ... ]
+#   knob registry 파일 형식:  knobs: [ <knob.schema.yaml 항목>, ... ]
 
 $defs:
 
@@ -25,6 +32,12 @@ $defs:
       readback: { type: string, description: "적용 여부를 확인할 TCL 표현식. 없으면 이 action은 readback 불가로 표시" }
       expect:   { type: string, description: "readback 출력이 포함해야 하는 문자열" }
       verified: { type: boolean }
+      requires:
+        type: array
+        items: { type: string }
+        description: >
+          code가 기대는 REF 전용 proc/변수/파일. 고객 flow에 없으면 overlay가 깨진다.
+          비어 있으면 self-contained로 간주. 2단계에서 고객 flow 존재 여부를 확인한다.
       source_ref: { $ref: "common.schema.yaml#/$defs/citation" }
 
   action_snippet:
@@ -134,6 +147,9 @@ properties:
     description: "REF flow에서 이 설정이 있는 위치 (REF flow 구조 md 작성 시 확정)"
     type: array
     items: { $ref: "common.schema.yaml#/$defs/citation" }
+  ref_toggle:
+    type: string
+    description: "REF flow에서 이 항목을 켜고 끄는 방식. 예) DTCO_USKEW 플래그 if문 / 별도 tcl source 여부"
   owner: { type: string, description: "infra 담당자 (approve 권한자)" }
   review_log:
     type: array

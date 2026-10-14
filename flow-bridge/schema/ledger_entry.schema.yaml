@@ -3,7 +3,8 @@
 # - 쓰기: ledger-curator만 (append-only, jsonl 권장). 수정 대신 supersedes로 정정 entry 추가.
 # - 핵심 규칙:
 #   1) delta만 저장. 절대 PPA 저장 금지 (디자인 간 비교 불가).
-#   2) readback_status가 applied가 아니면 effect 귀속 불가 → verdict는 반드시 invalid.
+#   2) source가 customer_validation인데 readback_status가 applied가 아니면 effect 귀속 불가 → verdict는 반드시 invalid.
+#      infra_ref / seed_interview는 readback_status=not_run 허용. 단 3단계 판단에서 실측(customer_validation)보다 낮은 가중치.
 #   3) noise_band 이하 delta는 neutral이 아니라 inconclusive. "효과 없음"과 "판정 불가"를 구분.
 #   4) negative / inconclusive도 반드시 기록 (같은 실패 반복 방지).
 
