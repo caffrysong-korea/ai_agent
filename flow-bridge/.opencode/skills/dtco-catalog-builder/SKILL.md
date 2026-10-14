@@ -6,6 +6,9 @@ description: 이미 돌린 PnR/PPA 평가 run 데이터(어떤 DTCO/DM 항목의
 
 # dtco-catalog-builder
 
+> 문서 안의 `schema/…`, `tools/…`, `config/…` 경로는 **flow-bridge 루트** 기준이다. `method/…`, `guides/…`, `templates/…`는 이 스킬 폴더 기준.
+> <!-- TODO(INHOUSE): 사내에 설치한 위치에서 두 기준 경로가 맞는지 확인 (H1) -->
+
 ## 하는 일 (한 줄)
 
 **평가 run 데이터 → DTCO 항목별 카드(md).** 카드가 없으면 만들고, 있으면 평가 결과를 한 줄 추가한다.
